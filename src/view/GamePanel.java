@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import control.GameStateManager;
+import control.MyKeyListener;
 
 public class GamePanel extends JPanel{
 	
@@ -17,6 +18,7 @@ public class GamePanel extends JPanel{
 	Timer gameTimer;
 	public GamePanel(GameStateManager gsm){
 		this.gsm = gsm;
+		this.setFocusable(true);
 		paintTimer = new Timer(1000/60,new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -31,6 +33,7 @@ public class GamePanel extends JPanel{
 			}
 		});
 		gameTimer.start();
+		this.addKeyListener(new MyKeyListener(gsm));
 	}
 	
 	public void paintComponent(Graphics g){

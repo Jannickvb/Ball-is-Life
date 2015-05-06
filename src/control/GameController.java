@@ -3,11 +3,16 @@ package control;
 import view.GameFrame;
 
 public class GameController {
-	public int width;
-	public int height;
+	private GameFrame frame;
 	public GameController(GameFrame frame){
-		this.width = frame.getWidth();
-		this.height = frame.getHeight();
+		this.frame = frame;
 	}
 	
+	public int getHeight(){
+		return frame.getContentPane().getHeight();
+	}
+	
+	public int getWidth(){
+		return frame.getContentPane().getWidth();
+	}
 }

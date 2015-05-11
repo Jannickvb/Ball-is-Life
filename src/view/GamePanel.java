@@ -4,12 +4,13 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import control.GameStateManager;
-import control.MyKeyListener;
 
 public class GamePanel extends JPanel{
 	
@@ -33,7 +34,16 @@ public class GamePanel extends JPanel{
 			}
 		});
 		gameTimer.start();
-		this.addKeyListener(new MyKeyListener(gsm));
+		this.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e)
+			{
+				gsm.currentState.keyPressed(e);
+			}
+			public void keyReleased(KeyEvent e){
+				gsm.currentState.keyReleased(e);
+			}
+		});
 	}
 	
 	public void paintComponent(Graphics g){

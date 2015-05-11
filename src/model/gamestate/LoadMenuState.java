@@ -14,7 +14,6 @@ public class LoadMenuState extends GameState{
 	private int menuIndex,stringWidth;
 	private int bHeight = 150,bWidth = 150;
 	private String[] saves = {"Empty","Empty","Empty"};
-	
 	public LoadMenuState(GameController gameControl, GameStateManager gsm){
 		super(gameControl,gsm);
 		this.gsm = gsm;
@@ -25,7 +24,13 @@ public class LoadMenuState extends GameState{
 		AffineTransform tx = new AffineTransform();
 		tx.translate(gameControl.getWidth()/2, gameControl.getHeight()/2);
 		g2.transform(tx);
-		
+		drawLoadStates(g2);
+		g2.setColor(Color.BLACK);
+		g2.drawRect(gameControl.getWidth()/2 - 51, gameControl.getHeight()/2 - 50, 50, 50);
+		g2.drawString("ESC", gameControl.getWidth()/2 - 35, gameControl.getHeight()/2-20);
+	}
+	
+	public void drawLoadStates(Graphics2D g2){
 		for(int i = 0; i < saves.length ; i++)
 		{
 			stringWidth = g2.getFontMetrics().stringWidth(saves[i]);
@@ -39,8 +44,6 @@ public class LoadMenuState extends GameState{
 				g2.drawRect(225*i-(bWidth*2), -(bHeight/2), bWidth, bHeight);
 			}
 		}
-		
-
 	}
 	
 	@Override

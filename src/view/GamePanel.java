@@ -10,15 +10,18 @@ import java.awt.event.KeyEvent;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import control.GameController;
 import control.GameStateManager;
 
 public class GamePanel extends JPanel{
 	
-	GameStateManager gsm;
-	Timer paintTimer;
-	Timer gameTimer;
-	public GamePanel(GameStateManager gsm){
-		this.gsm = gsm;
+	private GameStateManager gsm;
+	private Timer paintTimer;
+	private Timer gameTimer;
+	private GameController gc;
+	public GamePanel(GameController gc){
+		this.gc = gc;
+		this.gsm = this.gc.getGameStateManager();
 		this.setFocusable(true);
 		paintTimer = new Timer(1000/60,new ActionListener() {
 			@Override

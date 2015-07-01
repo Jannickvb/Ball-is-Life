@@ -30,10 +30,10 @@ public class GamePanel extends JPanel{
 			}
 		});
 		paintTimer.start();
-		gameTimer = new Timer(1000/20,new ActionListener() {
+		gameTimer = new Timer(1000/30,new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				gsm.currentState.update();
+				gsm.update();
 			}
 		});
 		gameTimer.start();
@@ -41,10 +41,15 @@ public class GamePanel extends JPanel{
 			@Override
 			public void keyPressed(KeyEvent e)
 			{
-				gsm.currentState.keyPressed(e);
+				gsm.keyPressed(e.getKeyCode());
+				if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+				{
+					System.out.println("Game closed...");
+					System.exit(0);
+				}
 			}
 			public void keyReleased(KeyEvent e){
-				gsm.currentState.keyReleased(e);
+				gsm.keyReleased(e.getKeyCode());
 			}
 		});
 	}
@@ -52,6 +57,6 @@ public class GamePanel extends JPanel{
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
-		gsm.currentState.draw(g2);
+		gsm.draw(g2);
 	}
 }

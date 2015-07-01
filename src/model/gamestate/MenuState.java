@@ -11,14 +11,13 @@ import control.GameStateManager;
 public class MenuState extends GameState{
 	
 	private GameController gameControl;
-	private GameStateManager gsm;
 	private String[] menuItems = {"Start","Load","Highscore","Exit"};
 	private int menuIndex;
 	private int stringWidth;
 	private int spacing = 100;
-	public MenuState(GameController gameControl,GameStateManager gsm) {
-		super(gameControl,gsm);
-		this.gsm = gsm;
+	public MenuState(GameController gameControl) {
+		super(gameControl);
+		this.menuIndex = 0;
 		this.gameControl = gameControl;
 	}
 
@@ -52,29 +51,29 @@ public class MenuState extends GameState{
 
 	public void select() {
 		if(menuIndex == 0){
-			gsm.start();
+			gameControl.getGameStateManager().start();
 		}
 		else if(menuIndex == menuItems.length-1){
 			System.exit(0);
 		}
 		else{
-			gsm.select(menuIndex);
+			gameControl.getGameStateManager().select(menuIndex);
 		}
 		
 	}
 	
 	@Override
-	public void keyPressed(KeyEvent e) {
-		if(e.getKeyCode() == KeyEvent.VK_ENTER)
+	public void keyPressed(int e) {
+		if(e == KeyEvent.VK_ENTER)
 			select();
-		if(e.getKeyCode() == KeyEvent.VK_UP)
+		if(e == KeyEvent.VK_UP)
 		{
 			menuIndex--;
 			if(menuIndex == -1) {
 				menuIndex = menuItems.length - 1;
 			}
 		}
-		if(e.getKeyCode() == KeyEvent.VK_DOWN)
+		if(e == KeyEvent.VK_DOWN)
 		{
 			menuIndex++;
 			if(menuIndex == menuItems.length) {
@@ -84,7 +83,7 @@ public class MenuState extends GameState{
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
+	public void keyReleased(int e) {
 		// TODO Auto-generated method stub
 		
 	}

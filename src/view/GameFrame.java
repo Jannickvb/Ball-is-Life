@@ -19,7 +19,7 @@ public class GameFrame extends JFrame{
 				}catch(Exception e){
 					e.printStackTrace();	
 				}finally{
-					System.out.println("Started Game");
+					System.out.println("Game started...");
 				}
 			}
 		});
@@ -30,7 +30,7 @@ public class GameFrame extends JFrame{
 	GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
 	
 	public GameFrame(){
-		super("BarrelRun");
+		super("BLOB RUNNER");
 		setSize(800,600);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -1,5 +1,6 @@
 package control;
 
+import control.handler.ImageHandler;
 import view.GameFrame;
 
 public class GameController {
@@ -7,11 +8,10 @@ public class GameController {
 	private GameFrame frame;
 	private GameStateManager gsm;
 	private ImageHandler imgHandler;
-
 	public GameController(GameFrame frame){
 		this.frame = frame;
-		this.gsm = new GameStateManager(this);
 		this.imgHandler = new ImageHandler(this);
+		this.gsm = new GameStateManager(this);
 	}
 	
 	public GameStateManager getGameStateManager() {

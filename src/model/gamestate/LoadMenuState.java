@@ -11,12 +11,14 @@ import control.GameStateManager;
 public class LoadMenuState extends GameState{
 	
 	private GameStateManager gsm;
+	private GameController gc;
 	private int menuIndex,stringWidth;
 	private int bHeight = 150,bWidth = 150;
 	private String[] saves = {"Empty","Empty","Empty"};
-	public LoadMenuState(GameController gameControl, GameStateManager gsm){
-		super(gameControl,gsm);
-		this.gsm = gsm;
+	public LoadMenuState(GameController gameControl){
+		super(gameControl);
+		this.gc=gameControl;
+		this.gsm = gc.getGameStateManager();
 	}
 	
 	@Override
@@ -52,19 +54,19 @@ public class LoadMenuState extends GameState{
 	}
 	
 	@Override
-	public void keyPressed(KeyEvent e) {
-		if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+	public void keyPressed(int e) {
+		if(e == KeyEvent.VK_ESCAPE)
 		{
 			gsm.select(0);
 		}
-		if(e.getKeyCode() == KeyEvent.VK_LEFT)
+		if(e == KeyEvent.VK_LEFT)
 		{
 			menuIndex--;
 			if(menuIndex == -1) {
 				menuIndex = saves.length - 1;
 			}
 		}
-		if(e.getKeyCode() == KeyEvent.VK_RIGHT)
+		if(e == KeyEvent.VK_RIGHT)
 		{
 			menuIndex++;
 			if(menuIndex == saves.length) {
@@ -74,7 +76,7 @@ public class LoadMenuState extends GameState{
 	}
 	
 	@Override
-	public void keyReleased(KeyEvent e) {
+	public void keyReleased(int e) {
 
 	}
 }

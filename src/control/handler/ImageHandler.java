@@ -1,4 +1,4 @@
-package control;
+package control.handler;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -8,28 +8,30 @@ import javax.imageio.ImageIO;
 
 import org.imgscalr.Scalr;
 
+import control.GameController;
 import view.GameFrame;
 
 public class ImageHandler {
 
-	public ArrayList<BufferedImage> images = new ArrayList<BufferedImage>();
+	public static ArrayList<BufferedImage> images = new ArrayList<BufferedImage>();
 	private Scalr.Mode mode;
 	private GameController gc;
 	
 	public ImageHandler(GameController gc) {
 		this.gc = gc;
+	}
+	static{
 		try {
-			addImage("", "test.png");
+			addImage("tileset", "tileset.png");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
 	public enum ImageType{
-	 test;
+		tileset;
 	}
 
-	public void addImage(String folderName, String fileName)
+	public static void addImage(String folderName, String fileName)
 			throws IOException {
 		if (folderName.equals(""))
 			images.add(ImageIO.read(GameFrame.class.getResource("/images/"
@@ -41,7 +43,7 @@ public class ImageHandler {
 																+ fileName)));
 	}
 
-	public BufferedImage getImage(ImageType img) {
+	public static BufferedImage getImage(ImageType img) {
 		return images.get(img.ordinal());
 	}
 
@@ -50,7 +52,6 @@ public class ImageHandler {
 		int targetSize;
 		if (mode == Scalr.Mode.FIT_TO_HEIGHT)
 		{
-			System.out.println(targetSize = gc.getHeight());
 			targetSize = gc.getHeight();
 		}
 		else

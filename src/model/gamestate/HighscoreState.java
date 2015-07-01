@@ -8,8 +8,8 @@ import control.GameStateManager;
 
 public class HighscoreState extends GameState{
 
-	public HighscoreState(GameController gameControl, GameStateManager gsm) {
-		super(gameControl, gsm);
+	public HighscoreState(GameController gameControl) {
+		super(gameControl);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -26,13 +26,13 @@ public class HighscoreState extends GameState{
 	}
 
 	@Override
-	public void keyPressed(KeyEvent e) {
+	public void keyPressed(int e) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
+	public void keyReleased(int e) {
 		// TODO Auto-generated method stub
 		
 	}

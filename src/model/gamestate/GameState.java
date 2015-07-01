@@ -8,13 +8,11 @@ import control.GameStateManager;
 
 public abstract class GameState {
 	protected GameController gameControl;
-	protected GameStateManager gsm;
-	public GameState(GameController gameControl, GameStateManager gsm){
+	public GameState(GameController gameControl){
 		this.gameControl = gameControl;
-		this.gsm = gsm;
 	}
 	public abstract void draw(Graphics2D g);
 	public abstract void update();
-	public abstract void keyPressed(KeyEvent e);
-	public abstract void keyReleased(KeyEvent e);
+	public abstract void keyPressed(int e);
+	public abstract void keyReleased(int e);
 }

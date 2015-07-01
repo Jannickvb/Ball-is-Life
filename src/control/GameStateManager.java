@@ -1,5 +1,6 @@
 package control;
 
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
@@ -18,10 +19,10 @@ public class GameStateManager {
 	public int index;
 	public GameStateManager(GameController gameControl){
 		this.gameControl = gameControl;
-		states.add(new MenuState(gameControl,this));
-		states.add(new LoadMenuState(gameControl,this));
-		states.add(new HighscoreState(gameControl,this));
-		states.add(new Lvl1State(gameControl,this));
+		states.add(new MenuState(gameControl));
+		states.add(new LoadMenuState(gameControl));
+		states.add(new HighscoreState(gameControl));
+		states.add(new Lvl1State(gameControl));
 		
 		currentState = states.get(0);
 	}
@@ -49,14 +50,23 @@ public class GameStateManager {
 	}
 	
 	public void select(int i){
-		currentState = states.get(i);
+//		currentState = states.get(i);
+		System.out.println(i);
 	}
 	
-	public void keyPressed(KeyEvent e){
+	public void keyPressed(int e){
 		currentState.keyPressed(e);
 	}
 	
-	public void keyReleased(KeyEvent e){
+	public void keyReleased(int e){
 		currentState.keyReleased(e);
+	}
+
+	public void draw(Graphics2D g2) {
+		currentState.draw(g2);
+	}
+	
+	public void update(){
+		currentState.update();
 	}
 }

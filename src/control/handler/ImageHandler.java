@@ -24,13 +24,15 @@ public class ImageHandler {
 		try {
 			addImage("tileset", "tileset.png");
 			addImage("spritesheets", "player.png");
+			addImage("backgrounds","background.png");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	public enum ImageType{
 		tileset,
-		player;
+		player,
+		background;
 	}
 
 	public static void addImage(String folderName, String fileName)

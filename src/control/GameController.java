@@ -1,5 +1,7 @@
 package control;
 
+import java.awt.Toolkit;
+
 import control.handler.ImageHandler;
 import view.GameFrame;
 
@@ -8,6 +10,8 @@ public class GameController {
 	private GameFrame frame;
 	private GameStateManager gsm;
 	private ImageHandler imgHandler;
+	
+	
 	public GameController(GameFrame frame){
 		this.frame = frame;
 		this.imgHandler = new ImageHandler(this);
@@ -23,10 +27,10 @@ public class GameController {
 	}
 	
 	public int getHeight(){
-		return frame.getContentPane().getHeight();
+		return Toolkit.getDefaultToolkit().getScreenSize().height;
 	}
 	
 	public int getWidth(){
-		return frame.getContentPane().getWidth();
+		return Toolkit.getDefaultToolkit().getScreenSize().width;
 	}
 }

@@ -7,10 +7,15 @@ import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 import javax.swing.Timer;
 
+import model.entity.Enemy;
+import model.entity.Entity;
+import model.entity.Player;
 import model.tiles.Tile;
 import model.tiles.TileMap;
 import control.GameController;
@@ -23,7 +28,7 @@ public class MainMap extends Entity implements ActionListener{
 	private GameStateManager gsm;
 	private Player player;
     private TileMap map,collisionmap;
- 
+    private List<Enemy> enemies;
 	// PARTICLE FIELDS
 	private ArrayList<Particle> particles = new ArrayList<Particle>(1000);
 	private Point drag;
@@ -40,6 +45,8 @@ public class MainMap extends Entity implements ActionListener{
 		this.player = new Player(gameControl,collisionmap,new Point2D.Double(300,300));
 		particleTimer = new Timer(1000 / 20, this);
 		particleTimer.start();
+		
+		enemies = new LinkedList<>();
 	}
 
 	@Override
@@ -61,7 +68,9 @@ public class MainMap extends Entity implements ActionListener{
 			for (Particle particle : particles) {
 				particle.paintComponent(g);
 			}
-			
+			for(Enemy enemy: enemies){
+				enemy.draw(g);
+			}
 			player.draw(g);
 	}
 
@@ -75,8 +84,16 @@ public class MainMap extends Entity implements ActionListener{
 				i.remove();
 			}
 		}
+		if(Math.floor(Math.random()*25) == 3){
+			enemies.add(new Enemy(gameControl, new Point2D.Double(200, 400)));
+		}
+		for(Enemy enemy: enemies){
+			enemy.update();
+		}
+		
 		player.update();
 	}
+	
 	public void updateParticles() {
 		drag = new Point((int) player.getPlayerTransform().getTranslateX(), (int) player.getPlayerTransform().getTranslateY());
 

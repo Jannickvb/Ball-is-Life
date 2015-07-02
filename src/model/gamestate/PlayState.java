@@ -7,6 +7,8 @@ import java.awt.geom.Point2D;
 import model.MainMap;
 import model.tiles.Background;
 import control.GameController;
+import control.handler.ImageHandler;
+import control.handler.ImageHandler.ImageType;
 
 public class PlayState extends GameState{
 
@@ -16,7 +18,7 @@ public class PlayState extends GameState{
 	public PlayState(GameController gameControl) {
 		super(gameControl);
 		mainmap = new MainMap(gameControl,new Point2D.Double(0, 0));
-		background = new Background(gameControl);
+		background = new Background(gameControl,gameControl.getImgHandler().getScaledImage(ImageHandler.getImage(ImageType.background)));
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package model;
+package model.entity;
 
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -6,7 +6,10 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.Iterator;
+import java.util.List;
 
+import model.Animation;
 import model.tiles.Tile;
 import model.tiles.TileMap;
 import control.GameController;
@@ -163,6 +166,5 @@ public class Player extends Entity {
 	
 	public boolean isMoving(){
 		return (up||left||down||right);
-	}
-	
+	}	
 }

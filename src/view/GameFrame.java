@@ -31,7 +31,7 @@ public class GameFrame extends JFrame{
 	
 	public GameFrame(){
 		super("BLOB RUNNER");
-		setSize(800,600);
+		setSize(815,610);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setContentPane(new GamePanel(new GameController(this)));

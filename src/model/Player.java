@@ -4,108 +4,165 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 
+import model.tiles.Tile;
+import model.tiles.TileMap;
 import control.GameController;
+import control.handler.ImageHandler;
+import control.handler.ImageHandler.ImageType;
 
-public class Player extends Entity{
+public class Player extends Entity {
 
-	private int x,y;
-	public final int MAXSPEED = 14;
-	private boolean up,down,left,right;
-	AffineTransform tx = new AffineTransform();
-	
-	public Player(GameController gameControl,Point2D position){
-		super(gameControl,position);
+	private int x, y;
+	public final int MAXSPEED = 15;
+	private boolean up, down, left, right;
+	private AffineTransform tx = new AffineTransform();
+	private Animation animation;
+	private BufferedImage sprite;
+	private TileMap tilemap;
+	public Player(GameController gameControl,TileMap tilemap, Point2D position) {
+		super(gameControl, position);
 		tx.translate(position.getX(), position.getY());
 		position.setLocation(0, 0);
-		x=0;y=0;
+		x = 0;
+		y = 0;
+		animation = new Animation(ImageHandler.getImage(ImageType.player), 32, 32, 20);
+		sprite = animation.getCurrentImage();
+		this.tilemap = tilemap;
 	}
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void draw(Graphics2D g2) {
+//		AffineTransform old = g2.getTransform();
+		g2.drawImage(sprite, (int)(-sprite.getWidth()/2 + tx.getTranslateX()),(int)(-sprite.getHeight()/2 + tx.getTranslateY()),null);
 		g2.setTransform(tx);
-		g2.drawRect((int)position.getX(), (int)position.getY(), 100, 100);
+//		g2.setTransform(old);
+//		g2.setStroke(new BasicStroke(4));
+//		g2.drawLine((int)tx.getTranslateX(), (int)tx.getTranslateY(), (int)tx.getTranslateX(), (int)tx.getTranslateY());
 	}
 
 	@Override
 	public void update() {
+		for(Tile[] row: tilemap.getTileMap()){
+			for(Tile column:row){
+				if(column.isSolid())
+					collision(column.getRect());
+			}
+		}
 		setPosition();
-//		System.out.println("\nx :" + x +"\ny " + y);
+		animation.update();
+		sprite = animation.getCurrentImage();
 	}
 
 	@Override
 	public void keyPressed(int e) {
-		if(e == KeyEvent.VK_UP)
+		if (e == KeyEvent.VK_UP)
 			up = true;
-		if(e == KeyEvent.VK_DOWN)
+		if (e == KeyEvent.VK_DOWN)
 			down = true;
-		if(e == KeyEvent.VK_LEFT)
+		if (e == KeyEvent.VK_LEFT)
 			left = true;
-		if(e == KeyEvent.VK_RIGHT)
+		if (e == KeyEvent.VK_RIGHT)
 			right = true;
 	}
 
 	@Override
 	public void keyReleased(int e) {
-		if(e == KeyEvent.VK_UP)
+		if (e == KeyEvent.VK_UP)
 			up = false;
-		if(e == KeyEvent.VK_DOWN)
+		if (e == KeyEvent.VK_DOWN)
 			down = false;
-		if(e == KeyEvent.VK_LEFT)
+		if (e == KeyEvent.VK_LEFT)
 			left = false;
-		if(e == KeyEvent.VK_RIGHT)
+		if (e == KeyEvent.VK_RIGHT)
 			right = false;
 	}
-	
+
 	public void setPosition() {
 
-		//VERTICAL MOVEMENT
-		if(y<=MAXSPEED)
-		{
-			if(up)
-				y-=2;
-			if(down)
-				y+=2;
-			if(!up && !down)
-			{
-				if(y>0)
-					y-=1;
-				if(y<0)
-					y+=1;
+		// VERTICAL MOVEMENT
+		if (y <= MAXSPEED) {
+			if (up)
+				y -= 2;
+			if (down)
+				y += 2;
+			if (!up && !down) {
+				if (y > 0)
+					y -= 1;
+				if (y < 0)
+					y += 1;
 			}
 		}
-		if(y<-MAXSPEED)y=-MAXSPEED;
-		if(y>MAXSPEED)y=MAXSPEED;
-		//HORIZONTAL MOVEMENT
-		if(x<=MAXSPEED)
-		{
-			if(left)
-				x-=2;
-			if(right)
-				x+=2;
-			if(!left && !right)
-			{
-				if(x>0)
-					x-=1;
-				if(x<0)
-					x+=1;
+		if (y < -MAXSPEED)
+			y = -MAXSPEED;
+		if (y > MAXSPEED)
+			y = MAXSPEED;
+		// HORIZONTAL MOVEMENT
+		if (x <= MAXSPEED) {
+			if (left)
+				x -= 2;
+			if (right)
+				x += 2;
+			if (!left && !right) {
+				if (x > 0)
+					x -= 1;
+				if (x < 0)
+					x += 1;
 			}
 		}
-		
-		if(x<-MAXSPEED)x=-MAXSPEED;
-		if(x>MAXSPEED)x=MAXSPEED;
+
+		if (x < -MAXSPEED)
+			x = -MAXSPEED;
+		if (x > MAXSPEED)
+			x = MAXSPEED;
 		tx.translate(x, y);
 
 	}
+	
+	public AffineTransform getPlayerTransform() {
+		return tx;
+	}
 
-	public Point2D getPosition(){
-		return new Point2D.Double(x, y);
+	public boolean collision(Rectangle2D r) {
+		double dX = tx.getTranslateX();
+		double dY = tx.getTranslateY();
+		
+		if(r.contains(new Point2D.Double(dX, dY-16)))
+		{
+			up = false;
+			y = -y;
+			return true;
+		}
+		if(r.contains(new Point2D.Double(dX+16, dY)))
+		{
+			right = false;
+			x = -x;
+			return true;
+		}
+		if(r.contains(new Point2D.Double(dX, dY+16)))
+		{
+			down = false;
+			y=-y;
+			return true;
+		}
+		if(r.contains(new Point2D.Double(dX-16, dY)))
+		{
+			left = false;
+			x=-x;
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isMoving(){
+		return (up||left||down||right);
 	}
 	
 }

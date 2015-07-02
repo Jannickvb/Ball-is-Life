@@ -20,10 +20,10 @@ public class MapHandler {
 		    int row = 0;
 		    String text = null;
 		    while ((text = br.readLine()) != null){
-		    	if(row < readMapHeight -1 )
+		    	if(row < readMapHeight )
 		    	{
 			        String[] tileValues = text.split(",");
-			        for(int col = 0; col < readMapWidth-1; col++){
+			        for(int col = 0; col < readMapWidth; col++){
 	//		        	System.out.println("col: "+map.length);
 			            map[row][col] = Integer.parseInt(tileValues[col]);  
 			        }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import model.gamestate.GameState;
 import model.gamestate.HighscoreState;
 import model.gamestate.LoadMenuState;
-import model.gamestate.Lvl1State;
+import model.gamestate.PlayState;
 import model.gamestate.MenuState;
 
 public class GameStateManager {
@@ -22,7 +22,7 @@ public class GameStateManager {
 		states.add(new MenuState(gameControl));
 		states.add(new LoadMenuState(gameControl));
 		states.add(new HighscoreState(gameControl));
-		states.add(new Lvl1State(gameControl));
+		states.add(new PlayState(gameControl));
 		
 		currentState = states.get(0);
 	}

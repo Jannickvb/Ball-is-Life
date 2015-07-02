@@ -23,9 +23,12 @@ public class TileMap {
 		{
 			for(int k=0 ; k<x; k++)
 			{
-				if(collisionMap && !isEmpty(tilemap[k][i]))
+				if(collisionMap)
 				{
-					tiles[k][i] = new Tile(true,i*Tile.size,k*Tile.size,tilemap[k][i]);
+					if(tilemap[k][i]!=0)
+						tiles[k][i] = new Tile(true,i*Tile.size,k*Tile.size,tilemap[k][i]);
+					else
+						tiles[k][i] = new Tile(false,i*Tile.size,k*Tile.size,tilemap[k][i]);
 				}
 				else
 				{
@@ -33,10 +36,6 @@ public class TileMap {
 				}
 			}
 		}
-	}
-	
-	private boolean isEmpty(int i){
-		return i>1;
 	}
 	
 	public boolean isCollisionMap(){

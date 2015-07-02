@@ -25,7 +25,7 @@ public class PlayState extends GameState{
 	public void draw(Graphics2D g) {
 		background.draw(g);
 		AffineTransform tx = new AffineTransform();
-		tx.translate(gameControl.getWidth()/2-400, gameControl.getHeight()/2-300);
+		tx.translate((((gameControl.getWidth()/2)-400)), 0);
 		g.setTransform(tx);
 	    mainmap.draw(g);
 	}

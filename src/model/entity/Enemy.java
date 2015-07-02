@@ -1,5 +1,6 @@
 package model.entity;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
@@ -18,30 +19,30 @@ public class Enemy extends Entity {
 	private BufferedImage image;
 	private Animation animation;
 	private Rectangle2D rect;
-	
+	private AffineTransform tx;
 	public Enemy(GameController gameControl, Point2D position) {
+		
 		super(gameControl, position);
 		this.position = position;
-		this.speed = 1 + Math.random() * 10;
-		this.target = new Point2D.Double(gameControl.getWidth() / 2,
-				gameControl.getHeight() / 2 - 100);
-		
-		this.animation = new Animation(ImageHandler.getImage(ImageType.player),32,32,25);
+		this.speed = 3 + Math.random() * 5;
+		this.target = new Point2D.Double(position.getX(),
+				position.getY()-gameControl.getHeight());
+		this.rotation = -90;
+		this.animation = new Animation(ImageHandler.getImage(ImageType.enemy),32,32,50);
 		this.image = animation.getCurrentImage();
+		
 	}
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void draw(Graphics2D g2) {
-		AffineTransform tx = new AffineTransform();
-		tx.translate(position.getX()-32, position.getY()-32);
+		tx = new AffineTransform();
+		tx.translate(position.getX()-16, position.getY()-16);
 		tx.rotate(rotation, 32, 32);
-		
 		g2.drawImage(image, tx ,null);
 	}
 
@@ -69,8 +70,25 @@ public class Enemy extends Entity {
 		
 		animation.update();
 		image = animation.getCurrentImage();
+		if(position.getY()>416 && position.getY()<448){
+			speed = 1;
+		}
+		if(!(target.getX()>320 && target.getX()<480) && position.getY() < 416)
+		{
+			target.setLocation((Math.random()*160)+320, 64);
+			speed = 2 + (Math.random()*5);
+		}
+		rect = new Rectangle2D.Double(position.getX()-16, position.getY()+16, 32, 32);
 	}
 
+	public Rectangle2D getRect() {
+		return rect;
+	}
+	
+	public AffineTransform getTransform() {
+		return tx;
+	}
+	
 	@Override
 	public void keyPressed(int e) {
 		// TODO Auto-generated method stub

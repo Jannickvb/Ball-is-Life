@@ -24,6 +24,10 @@ public class ImageHandler {
 		try {
 			addImage("tileset", "tileset.png");
 			addImage("spritesheets", "player.png");
+			addImage("spritesheets","enemy.png");
+			addImage("spritesheets","explosion.png");
+			addImage("spritesheets","trophy.png");
+			addImage("spritesheets","trophy_hit.png");
 			addImage("backgrounds","background.png");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -32,6 +36,10 @@ public class ImageHandler {
 	public enum ImageType{
 		tileset,
 		player,
+		enemy,
+		explosion,
+		trophy,
+		trophyHit,
 		background;
 	}
 

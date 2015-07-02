@@ -15,63 +15,76 @@ import javax.swing.Timer;
 
 import model.entity.Enemy;
 import model.entity.Entity;
+import model.entity.Explosion;
 import model.entity.Player;
+import model.entity.Trophy;
 import model.tiles.Tile;
 import model.tiles.TileMap;
 import control.GameController;
 import control.GameStateManager;
 import control.handler.MapHandler;
 
-public class MainMap extends Entity implements ActionListener{
+public class MainMap extends Entity implements ActionListener {
 
 	private GameController gameControl;
 	private GameStateManager gsm;
 	private Player player;
-    private TileMap map,collisionmap;
-    private List<Enemy> enemies;
+	private TileMap map, collisionmap;
+	private List<Enemy> enemies;
+	private List<Explosion> explosions;
+	private Trophy trophy;
+	
+	
 	// PARTICLE FIELDS
 	private ArrayList<Particle> particles = new ArrayList<Particle>(1000);
 	private Point drag;
 	private Random rand = new Random();
 	private Timer particleTimer;
 	// PARTICLE FIELDS
-	
+
 	public MainMap(GameController gameControl, Point2D position) {
 		super(gameControl, position);
 		this.gameControl = gameControl;
 		this.gsm = gameControl.getGameStateManager();
-		this.map = new TileMap(MapHandler.readLevelFile("res/maps/lvlmap.txt"),false);
-		this.collisionmap = new TileMap(MapHandler.readLevelFile("res/maps/collisionmap.txt"),true);
-		this.player = new Player(gameControl,collisionmap,new Point2D.Double(300,300));
+		this.map = new TileMap(MapHandler.readLevelFile("res/maps/lvlmap.txt"),
+				false);
+		this.collisionmap = new TileMap(
+				MapHandler.readLevelFile("res/maps/collisionmap.txt"), true);
+		this.player = new Player(gameControl, collisionmap, new Point2D.Double(
+				300, 300));
 		particleTimer = new Timer(1000 / 20, this);
 		particleTimer.start();
-		
+
 		enemies = new LinkedList<>();
+		explosions = new LinkedList<>();
+		trophy = new Trophy(gameControl,new Point2D.Double(388, 32));
 	}
 
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void draw(Graphics2D g) {
-		  for(Tile[] tileX: map.getTileMap())
-	        {
-	            for(Tile tileY: tileX)
-	            {
-	                tileY.draw(g);
-	            }
-	        }
-	        
-			for (Particle particle : particles) {
-				particle.paintComponent(g);
+		for (Tile[] tileX : map.getTileMap()) {
+			for (Tile tileY : tileX) {
+				tileY.draw(g);
 			}
-			for(Enemy enemy: enemies){
-				enemy.draw(g);
-			}
-			player.draw(g);
+		}
+
+		for (Particle particle : particles) {
+			particle.paintComponent(g);
+		}
+		trophy.draw(g);
+		for (Enemy enemy : enemies) {
+			enemy.draw(g);
+		}
+		for (Explosion expl : explosions) {
+			expl.draw(g);
+		}
+		player.draw(g);
 	}
 
 	@Override
@@ -84,47 +97,108 @@ public class MainMap extends Entity implements ActionListener{
 				i.remove();
 			}
 		}
-		if(Math.floor(Math.random()*25) == 3){
-			enemies.add(new Enemy(gameControl, new Point2D.Double(200, 400)));
+		if (Math.floor(Math.random() * 60) == 3) {
+			enemies.add(new Enemy(gameControl, new Point2D.Double((Math
+					.random() * 700) + 50, gameControl.getHeight() + 64)));
 		}
-		for(Enemy enemy: enemies){
+		for (Enemy enemy : enemies) {
 			enemy.update();
 		}
-		
+		for (Explosion expl : explosions) {
+			expl.update();
+		}
+		trophy.update();
+		collidingWithEnemy();
+		removeExplosions();
 		player.update();
 	}
-	
+
+	public void collidingWithEnemy() {
+		Iterator<Enemy> it = enemies.iterator();
+		while (it.hasNext())
+		{
+			Enemy enemy = it.next();
+			if(enemy.getRect().getY()<96)
+			{
+				trophy.setAnimation(true);
+				it.remove();
+			}
+			if (player.collision(enemy.getRect())) 
+			{
+				// System.out.println("" + enemy.getPosition());
+				explosions.add(new Explosion(gameControl, new Point2D.Double(
+						enemy.getRect().getX(), enemy.getRect().getY())));
+				it.remove();
+			}
+
+		}
+	}
+
+	public void removeExplosions() {
+		Iterator<Explosion> it = explosions.iterator();
+		while (it.hasNext())
+		{
+			Explosion explosion = it.next();
+			if (explosion.hasPlayedOnce())
+			{
+				it.remove();
+			}
+		}
+	}
+
 	public void updateParticles() {
-		drag = new Point((int) player.getPlayerTransform().getTranslateX(), (int) player.getPlayerTransform().getTranslateY());
+		drag = new Point((int) player.getPlayerTransform().getTranslateX(),
+				(int) player.getPlayerTransform().getTranslateY());
 
 		if (player.isMoving()) {
-			addParticle(drag);
-			addParticle(drag);
-			addParticle(drag);
-			addParticle(drag);
+			addParticle(drag,player);
+			addParticle(drag,player);
+			addParticle(drag,player);
+			addParticle(drag,player);
 		}
+		
+		for(Enemy enemy: enemies) {
+			drag = new Point((int) enemy.getRect().getX(),
+					(int) enemy.getRect().getY());
+			addParticle(drag,enemy);
+			addParticle(drag,enemy);
+			addParticle(drag,enemy);
+		}
+		
 		for (Particle particle : particles) {
 			particle.update();
 		}
-		
+
 	}
 
-	public void addParticle(Point2D startDrag) {
+	public void addParticle(Point2D startDrag,Entity entity) {
 		int size = (int) (rand.nextInt(15) * 1.1);
-		particles.add(new Particle((int)player.getPlayerTransform().getTranslateX(), (int)player.getPlayerTransform().getTranslateY(), size));
+		if(entity instanceof Player)
+		{
+			particles.add(new Particle((int) player.getPlayerTransform()
+					.getTranslateX(), (int) player.getPlayerTransform()
+					.getTranslateY(), size,true));
+		}
+		if(entity instanceof Enemy)
+		{
+			Enemy enemy = (Enemy) entity;
+			particles.add(new Particle((int) enemy.getTransform().getTranslateX()+16,
+					(int) enemy.getTransform().getTranslateY()-16,
+					size-2,false));
+		}
 	}
-	
-//	public boolean checkParticleCollision(Particle p){
-//		for(Tile[] row: map.getTileMap())
-//			for(Tile column:row){
-//				return column.getRect().contains(new Point2D.Double(p.getX(),p.getY()));
-//			}
-//		return false;
-//	}
+
+	// public boolean checkParticleCollision(Particle p){
+	// for(Tile[] row: map.getTileMap())
+	// for(Tile column:row){
+	// return column.getRect().contains(new Point2D.Double(p.getX(),p.getY()));
+	// }
+	// return false;
+	// }
 	@Override
 	public void keyPressed(int e) {
 		player.keyPressed(e);
-		
+
 	}
 
 	@Override

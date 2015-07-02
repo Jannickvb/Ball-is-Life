@@ -55,6 +55,10 @@ public class Animation {
 		spriteIndex = i;
 	}
 
+	public void setPlayedOnce(boolean bool) {
+		this.hasPlayedOnce = bool;
+	}
+	
 	public boolean hasPlayedOnce() {
 		return hasPlayedOnce;
 	}

@@ -11,6 +11,7 @@ public abstract class GameState {
 	public GameState(GameController gameControl){
 		this.gameControl = gameControl;
 	}
+	public abstract void init();
 	public abstract void draw(Graphics2D g);
 	public abstract void update();
 	public abstract void keyPressed(int e);

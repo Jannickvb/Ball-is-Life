@@ -33,8 +33,8 @@ public class MainMap extends Entity implements ActionListener {
 	private List<Enemy> enemies;
 	private List<Explosion> explosions;
 	private Trophy trophy;
-	
-	
+	private int nukeCounter;
+	private boolean nukeReady,popup;
 	// PARTICLE FIELDS
 	private ArrayList<Particle> particles = new ArrayList<Particle>(1000);
 	private Point drag;
@@ -58,6 +58,8 @@ public class MainMap extends Entity implements ActionListener {
 		enemies = new LinkedList<>();
 		explosions = new LinkedList<>();
 		trophy = new Trophy(gameControl,new Point2D.Double(388, 32));
+		nukeReady = false;
+		popup = false;
 	}
 
 	@Override
@@ -89,49 +91,78 @@ public class MainMap extends Entity implements ActionListener {
 
 	@Override
 	public void update() {
-		updateParticles();
-		Iterator<Particle> i = particles.iterator();
-		while (i.hasNext()) {
-			Particle p = i.next();
-			if (p.getLife() == 100) {
-				i.remove();
+		if(!trophy.isGameOver())
+			{
+			nukeCounter++;
+			if(nukeCounter > 300){
+				nukeReady = true;
 			}
+			updateParticles();
+			Iterator<Particle> i = particles.iterator();
+			while (i.hasNext()) {
+				Particle p = i.next();
+				if (p.getLife() == 100) {
+					i.remove();
+				}
+			}
+			if (Math.floor(Math.random() * 60) == 3) {
+				enemies.add(new Enemy(gameControl, new Point2D.Double((Math
+						.random() * 700) + 50, gameControl.getHeight() + 64)));
+			}
+			for (Enemy enemy : enemies) {
+				enemy.update();
+			}
+			for (Explosion expl : explosions) {
+				expl.update();
+			}
+			trophy.update();
+			collidingWithEnemy();
+			removeExplosions();
+			player.update();
+		}else if(trophy.isGameOver() && !popup){
+			new ScorePopup(new Score("",trophy.getScore()),gameControl);
+			popup = true;
 		}
-		if (Math.floor(Math.random() * 60) == 3) {
-			enemies.add(new Enemy(gameControl, new Point2D.Double((Math
-					.random() * 700) + 50, gameControl.getHeight() + 64)));
-		}
-		for (Enemy enemy : enemies) {
-			enemy.update();
-		}
-		for (Explosion expl : explosions) {
-			expl.update();
-		}
-		trophy.update();
-		collidingWithEnemy();
-		removeExplosions();
-		player.update();
 	}
 
-	public void collidingWithEnemy() {
+	public void destroyAllEnemies() {
 		Iterator<Enemy> it = enemies.iterator();
-		while (it.hasNext())
+		while(it.hasNext())
 		{
 			Enemy enemy = it.next();
-			if(enemy.getRect().getY()<96)
-			{
-				trophy.setAnimation(true);
-				it.remove();
-			}
+			trophy.raiseScore();
+			explosions.add(new Explosion(gameControl, new Point2D.Double(
+					enemy.getRect().getX(), enemy.getRect().getY())));
+			it.remove();
+		}
+	}
+	
+	public void collidingWithEnemy() {
+		Iterator<Enemy> colPl = enemies.iterator();
+		while (colPl.hasNext())
+		{
+			Enemy enemy = colPl.next();
 			if (player.collision(enemy.getRect())) 
 			{
 				// System.out.println("" + enemy.getPosition());
+				trophy.raiseScore();
 				explosions.add(new Explosion(gameControl, new Point2D.Double(
 						enemy.getRect().getX(), enemy.getRect().getY())));
-				it.remove();
+				colPl.remove();
 			}
-
 		}
+		Iterator<Enemy> colTr = enemies.iterator();
+		while(colTr.hasNext())
+		{
+			Enemy enemy = colTr.next();
+			if(enemy.getRect().getY()<96)
+			{
+				trophy.lowerHealth();
+				trophy.setAnimation(true);
+				colTr.remove();
+			}
+		}
+		
 	}
 
 	public void removeExplosions() {
@@ -188,6 +219,16 @@ public class MainMap extends Entity implements ActionListener {
 		}
 	}
 
+	public boolean nukeReady(){
+		return nukeReady;
+	}
+	
+	public void toggleOffNuke()
+	{
+		nukeCounter = 0;
+		this.nukeReady = false;
+	}
+	
 	// public boolean checkParticleCollision(Particle p){
 	// for(Tile[] row: map.getTileMap())
 	// for(Tile column:row){
@@ -195,6 +236,11 @@ public class MainMap extends Entity implements ActionListener {
 	// }
 	// return false;
 	// }
+	
+	public Trophy getTrophy() {
+		return trophy;
+	}
+	
 	@Override
 	public void keyPressed(int e) {
 		player.keyPressed(e);

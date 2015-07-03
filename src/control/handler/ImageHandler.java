@@ -28,6 +28,7 @@ public class ImageHandler {
 			addImage("spritesheets","explosion.png");
 			addImage("spritesheets","trophy.png");
 			addImage("spritesheets","trophy_hit.png");
+			addImage("hud","hud.png");
 			addImage("backgrounds","background.png");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -40,6 +41,7 @@ public class ImageHandler {
 		explosion,
 		trophy,
 		trophyHit,
+		hud,
 		background;
 	}
 

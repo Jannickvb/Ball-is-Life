@@ -13,8 +13,8 @@ public class Trophy extends Entity{
 
 	private Animation current,regular,hit;
 	private BufferedImage image;
-	private int x,y;
-	
+	private int x,y,health,score;
+	private boolean gameover;
 	public Trophy(GameController gameControl, Point2D position) {
 		super(gameControl, position);
 		regular = new Animation(ImageHandler.getImage(ImageType.trophy), 24, 30, 150);
@@ -23,6 +23,9 @@ public class Trophy extends Entity{
 		image = current.getCurrentImage();
 		x = (int) position.getX();
 		y = (int) position.getY();
+		health = 100;
+		score = 0;
+		gameover = false;
 	}
 
 	@Override
@@ -47,14 +50,45 @@ public class Trophy extends Entity{
 		}
 		current.update();
 		image = current.getCurrentImage();
+		if(health<=0){
+			gameover = true;
+		}
 	}
 
+	public boolean isGameOver(){
+		return gameover;
+	}
+	
+	public int getScore(){
+		return score;
+	}
+	
+	public void raiseScore(){
+		this.score += 50;
+	}
+	
+	public void setScore(int score){
+		this.score = score;
+	}
+	
 	public void setAnimation(boolean isHit) {
 		if(isHit)
 			current = hit;
 		else
 			current = regular;
 		current.setFrame(0);
+	}
+	
+	public int getHealth(){
+		return health;
+	}
+	
+	public void setHealth(int health){
+		this.health = health;
+	}
+	
+	public void lowerHealth(){
+		this.health -= 5;
 	}
 	
 	@Override

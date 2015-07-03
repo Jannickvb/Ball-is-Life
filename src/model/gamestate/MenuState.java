@@ -1,28 +1,36 @@
 package model.gamestate;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 
+import model.tiles.Background;
 import control.GameController;
-import control.GameStateManager;
+import control.handler.ImageHandler;
+import control.handler.ImageHandler.ImageType;
 
 public class MenuState extends GameState{
 	
 	private GameController gameControl;
-	private String[] menuItems = {"Start","Load","Highscore","Exit"};
+	private String[] menuItems = {"Start","Highscore","Exit"};
 	private int menuIndex;
 	private int stringWidth;
 	private int spacing = 100;
+	private Background bg;
+	private Font font;
 	public MenuState(GameController gameControl) {
 		super(gameControl);
 		this.menuIndex = 0;
 		this.gameControl = gameControl;
+		bg = new Background(gameControl,ImageHandler.getImage(ImageType.background));
+		font = new Font("Dialog",Font.BOLD,34);
 	}
 
 	@Override
 	public void draw(Graphics2D g2) {
+		bg.draw(g2);
 		AffineTransform tx = new AffineTransform();
 		tx.translate(gameControl.getWidth()/2, gameControl.getHeight()/2);
 		g2.transform(tx);
@@ -31,14 +39,18 @@ public class MenuState extends GameState{
 	
 	public void drawMenuItems(Graphics2D g2){
 		g2.translate(0, -menuItems.length *(spacing/2));
+		g2.setFont(font);
 		for(int i = 0; i < menuItems.length ; i++)
 		{
-			stringWidth = g2.getFontMetrics().stringWidth(menuItems[i]);
 			if(i == menuIndex){
 				g2.setColor(Color.RED);
+				font.deriveFont(24f);
+				stringWidth = g2.getFontMetrics().stringWidth(menuItems[i]);
 				g2.drawString(menuItems[i], -stringWidth/2, (i*((spacing/6) * 5)+((spacing/6)*5)));
 			}else{
-				g2.setColor(Color.BLACK);
+				g2.setColor(Color.WHITE);
+				font.deriveFont(18f);
+				stringWidth = g2.getFontMetrics().stringWidth(menuItems[i]);
 				g2.drawString(menuItems[i], -stringWidth/2, (i*((spacing/6) * 5)+((spacing/6)*5)));
 			}
 		}
@@ -84,6 +96,12 @@ public class MenuState extends GameState{
 
 	@Override
 	public void keyReleased(int e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void init() {
 		// TODO Auto-generated method stub
 		
 	}

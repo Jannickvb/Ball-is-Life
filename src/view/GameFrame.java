@@ -30,7 +30,7 @@ public class GameFrame extends JFrame{
 	GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
 	
 	public GameFrame(){
-		super("BLOB RUNNER");
+		super("BALL IS LIFE");
 		setSize(815,610);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

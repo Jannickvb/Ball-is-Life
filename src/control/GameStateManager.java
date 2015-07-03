@@ -1,14 +1,12 @@
 package control;
 
 import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import model.gamestate.GameState;
 import model.gamestate.HighscoreState;
-import model.gamestate.LoadMenuState;
-import model.gamestate.PlayState;
 import model.gamestate.MenuState;
+import model.gamestate.PlayState;
 
 public class GameStateManager {
 	
@@ -20,10 +18,9 @@ public class GameStateManager {
 	public GameStateManager(GameController gameControl){
 		this.gameControl = gameControl;
 		states.add(new MenuState(gameControl));
-		states.add(new LoadMenuState(gameControl));
 		states.add(new HighscoreState(gameControl));
 		states.add(new PlayState(gameControl));
-		
+
 		currentState = states.get(0);
 	}
 	
@@ -46,12 +43,13 @@ public class GameStateManager {
 	}
 	
 	public void start(){
-		currentState = states.get(3);
+		currentState = states.get(2);
 	}
 	
 	public void select(int i){
-//		currentState = states.get(i);
-		System.out.println(i);
+		currentState = states.get(i);
+		currentState.init();
+//		System.out.println(i);
 	}
 	
 	public void keyPressed(int e){

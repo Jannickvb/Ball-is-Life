@@ -136,29 +136,65 @@ public class Player extends Entity {
 	public boolean collision(Rectangle2D r) {
 		double dX = tx.getTranslateX();
 		double dY = tx.getTranslateY();
-		
-		if(r.contains(new Point2D.Double(dX, dY-16)))
+		boolean north = r.contains(new Point2D.Double(dX, dY-16)),
+				south = r.contains(new Point2D.Double(dX, dY+16)),
+				east = r.contains(new Point2D.Double(dX+16, dY)),
+				west = r.contains(new Point2D.Double(dX-16, dY));
+		if(north)
 		{
 			up = false;
 			y = -y;
 			return true;
 		}
-		if(r.contains(new Point2D.Double(dX+16, dY)))
+		if(east)
 		{
 			right = false;
 			x = -x;
 			return true;
 		}
-		if(r.contains(new Point2D.Double(dX, dY+16)))
+		if(south)
 		{
 			down = false;
 			y=-y;
 			return true;
 		}
-		if(r.contains(new Point2D.Double(dX-16, dY)))
+		if(west)
 		{
 			left = false;
 			x=-x;
+			return true;
+		}
+		/////////////////
+		if(north && west)
+		{
+			left = false;
+			up = false;
+			x=-x;
+			y=-y;
+			return true;
+		}
+		if(north && east)
+		{
+			right = false;
+			up = false;
+			x=-x;
+			y=-y;
+			return true;
+		}
+		if(south && west)
+		{
+			left = false;
+			down = false;
+			x=-x;
+			y=-y;
+			return true;
+		}
+		if(south && east)
+		{
+			right = false;
+			down = false;
+			x=-x;
+			y=-y;
 			return true;
 		}
 		return false;
